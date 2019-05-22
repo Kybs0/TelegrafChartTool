@@ -1,0 +1,100 @@
+﻿<UserControl x:Class="TelegrafChartTool.MainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TelegrafChartTool"
+             xmlns:modules="clr-namespace:TelegrafChartTool.Modules_"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="SettingBorderBrush" Color="#FFEEEEEE"></SolidColorBrush>
+        <SolidColorBrush x:Key="TabMenuBackground" Color="#F8F8F8"/>
+        <Style x:Key="Style.WordInfoTab" TargetType="TabControl">
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Background" Value="{StaticResource TabMenuBackground}"></Setter>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabControl">
+                        <Grid KeyboardNavigation.TabNavigation="Cycle">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="150"></RowDefinition>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" BorderThickness="0" BorderBrush="{StaticResource SettingBorderBrush}">
+                                <StackPanel Orientation="Vertical" IsItemsHost="True" Background="{TemplateBinding Background}"/>
+                            </Border>
+                            <Border Grid.Row="1" BorderThickness="0">
+                                <ContentPresenter x:Name="PART_SelectedContentHost" ContentSource="SelectedContent" Margin="{TemplateBinding Padding}" />
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="Style.TabItem" TargetType="TabItem">
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Height" Value="30"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Grid x:Name="Root">
+                            <Border x:Name="Border" Background="White" Margin="0"
+                                    BorderBrush="#E4E4E4"  Height="{TemplateBinding Height}" BorderThickness="0 0 0 2">
+                                <TextBlock x:Name="ContentTextBlock" Text="{TemplateBinding Header}" FontSize="14"
+                                           Foreground="#666666" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="true">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#65AD57"/>
+                                <Setter TargetName="Border" Property="BorderThickness" Value="0 0 0 2"/>
+                                <Setter TargetName="ContentTextBlock" Property="FontWeight" Value="Bold"/>
+                                <Setter TargetName="ContentTextBlock" Property="Foreground" Value="#65AD57"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <modules:BoolToVisibility x:Key="BoolToVisibility"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TabControl x:Name="TheTabControl" Margin="0 26 0 0" HorizontalAlignment="Center"
+                    VerticalAlignment="Stretch" BorderThickness="0">
+            <TabControl.Resources>
+                <Style TargetType="TextBox">
+                    <Setter Property="Foreground" Value="#666666"></Setter>
+                    <Setter Property="FontSize" Value="16"></Setter>
+                </Style>
+            </TabControl.Resources>
+            <TabItem Header="CPU" x:Name="CpuItem" MinWidth="100" IsSelected="True" Style="{StaticResource Style.TabItem}"/>
+            <TabItem Header="磁盘" x:Name="DiskItem" MinWidth="100"  Style="{StaticResource Style.TabItem}"/>
+            <TabItem Header="温度" x:Name="TempItem" MinWidth="100" Style="{StaticResource Style.TabItem}"/>
+            <TabItem Header="内存" x:Name="MemItem" MinWidth="100" Style="{StaticResource Style.TabItem}"/>
+            <TabItem Header="以太网" x:Name="NetItem" MinWidth="100" Style="{StaticResource Style.TabItem}"/>
+        </TabControl>
+        <Grid Grid.Row="1" Margin="100 20 100 20">
+            <local:CpuView Visibility="{Binding ElementName=CpuItem,Path=IsSelected,Converter={StaticResource BoolToVisibility}}"/>
+            <local:DiskView Visibility="{Binding ElementName=DiskItem,Path=IsSelected,Converter={StaticResource BoolToVisibility}}" />
+            <local:NetView Visibility="{Binding ElementName=NetItem,Path=IsSelected,Converter={StaticResource BoolToVisibility}}" />
+            <local:TempView Visibility="{Binding ElementName=TempItem,Path=IsSelected,Converter={StaticResource BoolToVisibility}}" />
+            <local:MemView Visibility="{Binding ElementName=MemItem,Path=IsSelected,Converter={StaticResource BoolToVisibility}}" />
+        </Grid>
+    </Grid>
+</UserControl>
