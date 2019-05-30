@@ -45,5 +45,33 @@ namespace TelegrafChartTool
             //从集合中取出第一条数据
             //var info_model = response.FirstOrDefault();
         }
+
+        #region 窗口事件
+
+        private void MinimizeButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void CloseButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Hide(sender, e);
+        }
+
+        private void Hide(object sender, EventArgs e)
+        {
+            this.ShowInTaskbar = false;
+            this.Visibility = Visibility.Hidden;
+        }
+
+        private void HeaderGrid_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ButtonState == MouseButtonState.Pressed)
+            {
+                this.DragMove();
+            }
+        }
+
+        #endregion
     }
 }
